@@ -1,0 +1,60 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Lens</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Stock Lens</h1>
+        <nav>
+            <ul>
+                <li><a href="#news">News</a></li>
+                <li><a href="#community">Community</a></li>
+                <li><a href="#stocks">Stocks</a></li>
+                <li><a href="#chatbot">Chatbot</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="news">
+            <h2>Latest Stock News</h2>
+            <div class="news-article">
+                <h3>Market Update</h3>
+                <p>Latest updates on stock market trends...</p>
+            </div>
+        </section>
+        <section id="community">
+            <h2>Community Forum</h2>
+            <div class="forum-post">
+                <h3>User Discussion</h3>
+                <p>Join the conversation about stock investments...</p>
+            </div>
+        </section>
+        <section id="stocks">
+            <h2>Stock Summaries</h2>
+            <div class="stock-summary">
+                <h3></h3>
+                <p></p>
+                <p>Summary:</p>
+            </div>
+        </section>
+        <section id="chatbot">
+            <h2>AI Chatbot</h2>
+            <div id="chatbox">
+                <input type="text" id="userInput" placeholder="Ask me about stocks...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+            <div id="chatOutput"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Stock Lens. All rights reserved.</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
