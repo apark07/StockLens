@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Lens - Real-time Market Dashboard</title>
+    <link rel="stylesheet" href="Stock.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="32" height="32" rx="8" fill="url(#gradient1)"/>
+                    <path d="M8 20L12 16L16 18L24 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="24" cy="10" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient1" x1="0" y1="0" x2="32" y2="32">
+                            <stop offset="0%" stop-color="#667eea"/>
+                            <stop offset="100%" stop-color="#764ba2"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <h1>Stock Lens</h1>
+            </div>
+            <div class="header-info">
+                <div class="market-status">
+                    <span class="status-dot"></span>
+                    <span id="market-status">Market Open</span>
+                </div>
+                <div class="last-update">
+                    Last updated: <span id="last-update">--</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="left-panel">
+                <section class="stocks-section">
+                    <div class="section-header">
+                        <h2>Live Stocks</h2>
+                        <button class="refresh-btn" onclick="refreshStocks()">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13 3L13 7L9 7M3 13L3 9L7 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M12.5 6.5C11.8 4.8 10.1 3.5 8 3.5C5.2 3.5 3 5.7 3 8.5M3.5 9.5C4.2 11.2 5.9 12.5 8 12.5C10.8 12.5 13 10.3 13 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                            Refresh
+                        </button>
+                    </div>
+                    <div id="stocks-grid" class="stocks-grid">
+                        <div class="loading">Loading stocks...</div>
+                    </div>
+                </section>
+
+                <section class="chart-section">
+                    <div class="section-header">
+                        <h2 id="chart-title">Select a stock to view chart</h2>
+                        <div class="time-range">
+                            <button class="range-btn active" data-range="1d">1D</button>
+                            <button class="range-btn" data-range="5d">5D</button>
+                            <button class="range-btn" data-range="1mo">1M</button>
+                            <button class="range-btn" data-range="3mo">3M</button>
+                            <button class="range-btn" data-range="1y">1Y</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="stockChart"></canvas>
+                    </div>
+                </section>
+
+                <section class="news-section">
+                    <div class="section-header">
+                        <h2>Market News</h2>
+                    </div>
+                    <div id="news-container" class="news-container">
+                        <div class="loading">Loading news...</div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="right-panel">
+                <section class="chatbot-section">
+                    <div class="section-header">
+                        <h2>AI Assistant</h2>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <circle cx="10" cy="10" r="8" stroke="url(#gradient2)" stroke-width="2"/>
+                            <circle cx="7" cy="8" r="1.5" fill="url(#gradient2)"/>
+                            <circle cx="13" cy="8" r="1.5" fill="url(#gradient2)"/>
+                            <path d="M7 12C7 12 8.5 14 10 14C11.5 14 13 12 13 12" stroke="url(#gradient2)" stroke-width="1.5" stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="gradient2" x1="0" y1="0" x2="20" y2="20">
+                                    <stop offset="0%" stop-color="#667eea"/>
+                                    <stop offset="100%" stop-color="#764ba2"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div id="chatbot-messages" class="chatbot-messages">
+                        <div class="bot-message">
+                            <div class="message-content">
+                                <strong>AI Assistant:</strong> Hello! I'm your stock market assistant. Ask me anything about stocks, market trends, or financial advice!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chatbot-input">
+                        <input type="text" id="chatbot-input" placeholder="Ask about stocks, trends, or market insights...">
+                        <button onclick="sendChatbotMessage()">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M2 10L18 3L11 19L9 11L2 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </section>
+
+                <section class="community-section">
+                    <div class="section-header">
+                        <h2>Community Chat</h2>
+                        <span class="online-count" id="online-count">● Live</span>
+                    </div>
+                    <div id="community-messages" class="community-messages">
+                        <div class="system-message">Welcome to the Stock Lens community chat!</div>
+                    </div>
+                    <div class="community-input">
+                        <input type="text" id="username-input" placeholder="Your name" maxlength="20" value="Trader">
+                        <input type="text" id="community-input" placeholder="Share your thoughts on the market...">
+                        <button onclick="sendCommunityMessage()">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M2 10L18 3L11 19L9 11L2 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
