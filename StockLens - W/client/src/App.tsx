@@ -36,6 +36,7 @@ export default function App() {
         <Link to="/">Dashboard</Link>
         <Link to="/community">Community</Link>
         <Link to="/profile">Profile</Link>
+        <Link to="/chat">ChatBot</Link>
 
         <div style={{ marginLeft: "auto", display: "flex", gap: 12, alignItems: "center" }}>
           {!user ? <Link to="/auth">Login</Link> : <span>{displayName}</span>}

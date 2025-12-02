@@ -7,6 +7,7 @@ import Community from "./pages/Community";
 import Stock from "./pages/Stock";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
+import Chat from "./pages/ChatBot"; 
 
 const router = createBrowserRouter([
   { path: "/", element: <App />, children: [
@@ -15,6 +16,7 @@ const router = createBrowserRouter([
       { path: "stock/:symbol", element: <Stock /> },
       { path: "auth", element: <Auth /> },
       { path: "profile", element: <Profile /> },
+      { path: "chat", element: <Chat /> },
   ]}
 ]);
 
